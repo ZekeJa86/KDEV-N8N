@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire de Soumission</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #e9ecef;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            padding: 30px;
+            max-width: 400px; /* Largeur maximale */
+            width: 100%; /* Largeur 100% jusqu'à la largeur maximale */
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .form-container:hover {
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 12px;
+            font-size: 16px;
+            margin-top: 15px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .sub-section {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+    </style>
+
+    <script>
+        function showSubSection() {
+            const businessType = document.getElementById('business').value;
+            const sections = document.querySelectorAll('.sub-section');
+            sections.forEach(section => section.style.display = 'none');
+            if (businessType) {
+                document.getElementById(businessType).style.display = 'block';
+            }
+        }
+
+        async function handleSubmit(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+
+            try {
+                const response = await fetch('https://kdev.app.n8n.cloud/webhook/https://<votre-instance-n8n>/webhook/submit-form', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    window.location.href = "confirmation.html";
+                } else {
+                    alert('Erreur lors de l\'envoi du formulaire. Veuillez réessayer.');
+                }
+            } catch (error) {
+                alert('Erreur lors de l\'envoi du formulaire. Veuillez vérifier votre connexion.');
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Formulaire de Soumission</h2>
+        <form onsubmit="handleSubmit(event);">
+            <label for="name">Nom :</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email :</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="location">Localisation :</label>
+            <input type="text" id="location" name="location" required placeholder="Entrez votre localisation">
+
+            <label for="size">Taille de l'entreprise (employés) :</label>
+            <select id="size" name="size" required>
+                <option value="" disabled selected>Sélectionnez la taille de votre entreprise</option>
+                <option value="1-10">1-10</option>
+                <option value="11-50">11-50</option>
+                <option value="51-200">51-200</option>
+                <option value="201-500">201-500</option>
+                <option value="501-1000">501-1000</option>
+                <option value="1001+">1001+</option>
+            </select>
+
+            <label for="business">Type de Business :</label>
+            <select id="business" name="business" required onchange="showSubSection()">
+                <option value="" disabled selected>Sélectionnez votre type de business</option>
+                <option value="retail">Commerce de détail</option>
+                <option value="service">Service</option>
+                <option value="manufacturing">Fabrication</option>
+                <option value="hospitality">Hôtellerie</option>
+                <option value="tech">Technologie</option>
+                <option value="healthcare">Santé</option>
+                <option value="finance">Finance</option>
+                <option value="education">Éducation</option>
+                <option value="real_estate">Immobilier</option>
+                <option value="construction">Construction</option>
+                <option value="transportation">Transport</option>
+                <option value="agriculture">Agriculture</option>
+                <option value="media">Médias</option>
+                <option value="entertainment">Divertissement</option>
+                <option value="non_profit">Organisme à but non lucratif</option>
+                <option value="consulting">Consultation</option>
+                <option value="ecommerce">Commerce électronique</option>
+                <option value="telecommunications">Télécommunications</option>
+                <option value="automotive">Automobile</option>
+                <option value="food_beverage">Alimentation et boissons</option>
+                <option value="pharmaceutical">Pharmaceutique</option>
+                <option value="logistics">Logistique</option>
+                <option value="security">Sécurité</option>
+                <option value="other">Autre</option>
+            </select>
+
+            <!-- Sous-sections -->
+            <div id="retail" class="sub-section">
+                <h3>Commerce de Détail</h3>
+                <label for="retail_type">Type de Commerce de Détail :</label>
+                <input type="text" id="retail_type" name="retail_type" placeholder="Ex : Boutique de vêtements">
+            </div>
+
+            <div id="service" class="sub-section">
+                <h3>Service</h3>
+                <label for="service_type">Type de Service :</label>
+                <input type="text" id="service_type" name="service_type" placeholder="Ex : Salon de coiffure">
+            </div>
+
+            <div id="manufacturing" class="sub-section">
+                <h3>Fabrication</h3>
+                <label for="manufacturing_type">Type de Fabrication :</label>
+                <input type="text" id="manufacturing_type" name="manufacturing_type" placeholder="Ex : Usine de meubles">
+            </div>
+
+            <div id="hospitality" class="sub-section">
+                <h3>Hôtellerie</h3>
+                <label for="hospitality_type">Type d'Hôtellerie :</label>
+                <input type="text" id="hospitality_type" name="hospitality_type" placeholder="Ex : Hôtel 5 étoiles">
+            </div>
+
+            <div id="tech" class="sub-section">
+                <h3>Technologie</h3>
+                <label for="tech_type">Type de Technologie :</label>
+                <input type="text" id="tech_type" name="tech_type" placeholder="Ex : Start-up de logiciels">
+            </div>
+
+            <div id="healthcare" class="sub-section">
+                <h3>Santé</h3>
+                <label for="healthcare_type">Type de Santé :</label>
+                <input type="text" id="healthcare_type" name="healthcare_type" placeholder="Ex : Clinique">
+            </div>
+
+            <div id="finance" class="sub-section">
+                <h3>Finance</h3>
+                <label for="finance_type">Type de Finance :</label>
+                <input type="text" id="finance_type" name="finance_type" placeholder="Ex : Banque">
+            </div>
+
+            <div id="education" class="sub-section">
+                <h3>Éducation</h3>
+                <label for="education_type">Type d'Éducation :</label>
+                <input type="text" id="education_type" name="education_type" placeholder="Ex : École primaire">
+            </div>
+
+            <div id="real_estate" class="sub-section">
+                <h3>Immobilier</h3>
+                <label for="real_estate_type">Type d'Immobilier :</label>
+                <input type="text" id="real_estate_type" name="real_estate_type" placeholder="Ex : Agence immobilière">
+            </div>
+
+            <div id="construction" class="sub-section">
+                <h3>Construction</h3>
+                <label for="construction_type">Type de Construction :</label>
+                <input type="text" id="construction_type" name="construction_type" placeholder="Ex : Entreprise de bâtiment">
+            </div>
+
+            <div id="transportation" class="sub-section">
+                <h3>Transport</h3>
+                <label for="transportation_type">Type de Transport :</label>
+                <input type="text" id="transportation_type" name="transportation_type" placeholder="Ex : Société de transport">
+            </div>
+
+            <div id="agriculture" class="sub-section">
+                <h3>Agriculture</h3>
+                <label for="agriculture_type">Type d'Agriculture :</label>
+                <input type="text" id="agriculture_type" name="agriculture_type" placeholder="Ex : Ferme bio">
+            </div>
+
+            <div id="media" class="sub-section">
+                <h3>Médias</h3>
+                <label for="media_type">Type de Médias :</label>
+                <input type="text" id="media_type" name="media_type" placeholder="Ex : Blog ou chaîne YouTube">
+            </div>
+
+            <div id="entertainment" class="sub-section">
+                <h3>Divertissement</h3>
+                <label for="entertainment_type">Type de Divertissement :</label>
+                <input type="text" id="entertainment_type" name="entertainment_type" placeholder="Ex : Studio de cinéma">
+            </div>
+
+            <div id="non_profit" class="sub-section">
+                <h3>Organisme à But Non Lucratif</h3>
+                <label for="non_profit_type">Type d'Organisme :</label>
+                <input type="text" id="non_profit_type" name="non_profit_type" placeholder="Ex : ONG">
+            </div>
+
+            <div id="consulting" class="sub-section">
+                <h3>Consultation</h3>
+                <label for="consulting_type">Type de Consultation :</label>
+                <input type="text" id="consulting_type" name="consulting_type" placeholder="Ex : Cabinet de conseil">
+            </div>
+
+            <div id="ecommerce" class="sub-section">
+                <h3>Commerce Électronique</h3>
+                <label for="ecommerce_type">Type de Commerce Électronique :</label>
+                <input type="text" id="ecommerce_type" name="ecommerce_type" placeholder="Ex : Boutique en ligne">
+            </div>
+
+            <div id="telecommunications" class="sub-section">
+                <h3>Télécommunications</h3>
+                <label for="telecommunications_type">Type de Télécommunications :</label>
+                <input type="text" id="telecommunications_type" name="telecommunications_type" placeholder="Ex : Fournisseur de services">
+            </div>
+
+            <div id="automotive" class="sub-section">
+                <h3>Automobile</h3>
+                <label for="automotive_type">Type d'Automobile :</label>
+                <input type="text" id="automotive_type" name="automotive_type" placeholder="Ex : Concessionnaire">
+            </div>
+
+            <div id="food_beverage" class="sub-section">
+                <h3>Alimentation et Boissons</h3>
+                <label for="food_beverage_type">Type d'Alimentation et Boissons :</label>
+                <input type="text" id="food_beverage_type" name="food_beverage_type" placeholder="Ex : Restaurant">
+            </div>
+
+            <div id="pharmaceutical" class="sub-section">
+                <h3>Pharmaceutique</h3>
+                <label for="pharmaceutical_type">Type de Pharmaceutique :</label>
+                <input type="text" id="pharmaceutical_type" name="pharmaceutical_type" placeholder="Ex : Pharmacie">
+            </div>
+
+            <div id="logistics" class="sub-section">
+                <h3>Logistique</h3>
+                <label for="logistics_type">Type de Logistique :</label>
+                <input type="text" id="logistics_type" name="logistics_type" placeholder="Ex : Entreprise de logistique">
+            </div>
+
+            <div id="security" class="sub-section">
+                <h3>Sécurité</h3>
+                <label for="security_type">Type de Sécurité :</label>
+                <input type="text" id="security_type" name="security_type" placeholder="Ex : Agence de sécurité">
+            </div>
+
+            <div id="other" class="sub-section">
+                <h3>Autre</h3>
+                <label for="other_type">Type d'Autre :</label>
+                <input type="text" id="other_type" name="other_type" placeholder="Veuillez préciser">
+            </div>
+
+            <input type="submit" value="Soumettre">
+        </form>
+    </div>
+</body>
+</html>
